@@ -6,7 +6,6 @@ import Betsolutions.Casino.SDK.DTO.Rake.GetRakeDetailedResponseContainer;
 import Betsolutions.Casino.SDK.DTO.Rake.GetRakeRequest;
 import Betsolutions.Casino.SDK.DTO.Rake.GetRakeResponseContainer;
 import Betsolutions.Casino.SDK.Enums.StatusCode;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -52,8 +51,7 @@ public class RakeService extends BaseService {
         Response response;
 
         try {
-            OkHttpClient client = new OkHttpClient();
-            response = client.newCall(request).execute();
+            response = httpClient.newCall(request).execute();
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -105,8 +103,7 @@ public class RakeService extends BaseService {
         Response response;
 
         try {
-            OkHttpClient client = new OkHttpClient();
-            response = client.newCall(request).execute();
+            response = httpClient.newCall(request).execute();
         } catch (IOException e) {
             e.printStackTrace();
 

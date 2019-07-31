@@ -3,7 +3,6 @@ package Betsolutions.Casino.SDK.Services;
 import Betsolutions.Casino.SDK.DTO.Game.GetGamesResponseContainer;
 import Betsolutions.Casino.SDK.DTO.MerchantAuthInfo;
 import Betsolutions.Casino.SDK.Enums.StatusCode;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -36,8 +35,7 @@ public class GameService extends BaseService {
 
         Response response;
         try {
-            OkHttpClient client = new OkHttpClient();
-            response = client.newCall(request).execute();
+            response = httpClient.newCall(request).execute();
         } catch (IOException e) {
             e.printStackTrace();
 

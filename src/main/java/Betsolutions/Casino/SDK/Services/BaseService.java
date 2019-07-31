@@ -4,6 +4,7 @@ import Betsolutions.Casino.SDK.DTO.MerchantAuthInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -15,6 +16,7 @@ public abstract class BaseService {
     String baseUrl;
     SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
     Gson gson = new GsonBuilder().setDateFormat(dateFormat.toPattern()).create();
+    OkHttpClient httpClient = new OkHttpClient();
 
     static final MediaType JSON
             = MediaType.get("application/json; charset=utf-8");

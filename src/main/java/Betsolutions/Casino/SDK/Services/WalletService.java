@@ -4,7 +4,6 @@ import Betsolutions.Casino.SDK.DTO.MerchantAuthInfo;
 import Betsolutions.Casino.SDK.DTO.Wallet.GetBalanceRequest;
 import Betsolutions.Casino.SDK.DTO.Wallet.GetBalanceResponseContainer;
 import Betsolutions.Casino.SDK.Enums.StatusCode;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -39,8 +38,8 @@ public class WalletService extends BaseService {
         Response response;
 
         try {
-            OkHttpClient client = new OkHttpClient();
-            response = client.newCall(request).execute();
+
+            response = httpClient.newCall(request).execute();
         } catch (IOException e) {
             e.printStackTrace();
 
