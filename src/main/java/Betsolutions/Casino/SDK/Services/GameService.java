@@ -3,7 +3,6 @@ package Betsolutions.Casino.SDK.Services;
 import Betsolutions.Casino.SDK.DTO.Game.GetGamesResponseContainer;
 import Betsolutions.Casino.SDK.DTO.MerchantAuthInfo;
 import Betsolutions.Casino.SDK.Enums.StatusCode;
-import com.google.gson.Gson;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -24,7 +23,7 @@ public class GameService extends BaseService {
         String hash = sha256(rawHash);
 
         GetGamesRequest requestModel = new GetGamesRequest(this.merchantAuthInfo.MerchantId, hash);
-        String requestJsonStr = new Gson().toJson(requestModel, GetGamesRequest.class);
+        String requestJsonStr = gson.toJson(requestModel, GetGamesRequest.class);
 
         RequestBody body = RequestBody.create(requestJsonStr, JSON);
 
@@ -54,7 +53,7 @@ public class GameService extends BaseService {
             return new GetGamesResponseContainer(StatusCode.GeneralError, e.getMessage());
         }
 
-        return new Gson().fromJson(responseBodyStr, GetGamesResponseContainer.class);
+        return gson.fromJson(responseBodyStr, GetGamesResponseContainer.class);
     }
 
     private class GetGamesRequest {
