@@ -9,14 +9,16 @@ import okhttp3.OkHttpClient;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 public abstract class BaseService {
 
     protected MerchantAuthInfo merchantAuthInfo;
     String baseUrl;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
-    Gson gson = new GsonBuilder().setDateFormat(dateFormat.toPattern()).create();
-    OkHttpClient httpClient = new OkHttpClient();
+    SimpleDateFormat dateFormat;
+    Gson gson;
+    OkHttpClient httpClient;
 
     static final MediaType JSON
             = MediaType.get("application/json; charset=utf-8");
@@ -24,6 +26,9 @@ public abstract class BaseService {
     public BaseService(MerchantAuthInfo merchantAuthInfo, String controller) {
         this.merchantAuthInfo = merchantAuthInfo;
         this.baseUrl = this.merchantAuthInfo.BaseUrl + "v1/" + controller + "/";
+        this.dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+        this.gson = new GsonBuilder().setDateFormat(dateFormat.toPattern()).create();
+        this.httpClient = new OkHttpClient();
     }
 
     static String sha256(String base) {
@@ -41,6 +46,34 @@ public abstract class BaseService {
             return hexString.toString();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
+        }
+    }
+
+    protected class HashBuilder {
+
+        private String privateKey;
+        private StringJoiner stringJoiner;
+
+        protected HashBuilder(String privateKey) {
+            this.privateKey = privateKey;
+            this.Reset();
+        }
+
+        private void Reset() {
+            this.stringJoiner = new StringJoiner("|");
+        }
+
+        public <T> void Add(T str) {
+
+            this.stringJoiner.add(Objects.toString(str, ""));
+        }
+
+        public String Build() {
+            this.stringJoiner.add(this.privateKey);
+            String result = this.stringJoiner.toString();
+            this.Reset();
+
+            return result;
         }
     }
 }

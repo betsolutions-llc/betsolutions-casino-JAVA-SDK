@@ -21,7 +21,13 @@ public class WalletService extends BaseService {
 
     public GetBalanceResponseContainer GetBalance(GetBalanceRequest requestModel) {
 
-        String rawHash = requestModel.Currency + "|" + this.merchantAuthInfo.MerchantId + "|" + requestModel.Token + "|" + requestModel.UserId + "|" + this.merchantAuthInfo.PrivateKey;
+        HashBuilder hashBuilder = new HashBuilder(merchantAuthInfo.PrivateKey);
+        hashBuilder.Add(requestModel.Currency);
+        hashBuilder.Add(this.merchantAuthInfo.MerchantId);
+        hashBuilder.Add(requestModel.Token);
+        hashBuilder.Add(requestModel.UserId);
+
+        String rawHash = hashBuilder.Build();
 
         requestModel.Hash = sha256(rawHash);
         requestModel.MerchantId = merchantAuthInfo.MerchantId;
@@ -62,7 +68,16 @@ public class WalletService extends BaseService {
 
     public DepositResponseContainer Deposit(DepositRequest requestModel) {
 
-        String rawHash = requestModel.Amount + "|" + requestModel.Currency + "|" + this.merchantAuthInfo.MerchantId + "|" + requestModel.TransactionId + "|" + requestModel.Token + "|" + requestModel.UserId + "|" + this.merchantAuthInfo.PrivateKey;
+        HashBuilder hashBuilder = new HashBuilder(merchantAuthInfo.PrivateKey);
+
+        hashBuilder.Add(requestModel.Amount);
+        hashBuilder.Add(requestModel.Currency);
+        hashBuilder.Add(this.merchantAuthInfo.MerchantId);
+        hashBuilder.Add(requestModel.TransactionId);
+        hashBuilder.Add(requestModel.Token);
+        hashBuilder.Add(requestModel.UserId);
+
+        String rawHash = hashBuilder.Build();
 
         requestModel.Hash = sha256(rawHash);
         requestModel.MerchantId = merchantAuthInfo.MerchantId;

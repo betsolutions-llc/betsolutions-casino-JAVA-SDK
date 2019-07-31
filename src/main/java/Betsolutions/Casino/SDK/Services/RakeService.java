@@ -32,7 +32,14 @@ public class RakeService extends BaseService {
             toDateStr = dateFormat.format(requestModel.ToDate);
         }
 
-        String rawHash = this.merchantAuthInfo.MerchantId + "|" + Objects.toString(requestModel.UserId, "") + "|" + Objects.toString(fromDateStr, "") + "|" + Objects.toString(toDateStr, "") + "|" + Objects.toString(requestModel.GameId, "") + "|" + this.merchantAuthInfo.PrivateKey;
+        HashBuilder hashBuilder = new HashBuilder(merchantAuthInfo.PrivateKey);
+        hashBuilder.Add(this.merchantAuthInfo.MerchantId);
+        hashBuilder.Add(requestModel.UserId);
+        hashBuilder.Add(fromDateStr);
+        hashBuilder.Add(toDateStr);
+        hashBuilder.Add(requestModel.GameId);
+
+        String rawHash = hashBuilder.Build();
 
         requestModel.Hash = sha256(rawHash);
         requestModel.MerchantId = merchantAuthInfo.MerchantId;
@@ -84,8 +91,14 @@ public class RakeService extends BaseService {
             toDateStr = dateFormat.format(requestModel.ToDate);
         }
 
-        String rawHash = this.merchantAuthInfo.MerchantId + "|" + Objects.toString(requestModel.UserId, "") + "|" + Objects.toString(fromDateStr, "") + "|" + Objects.toString(toDateStr, "") + "|" + Objects.toString(requestModel.GameId, "") + "|" + this.merchantAuthInfo.PrivateKey;
+        HashBuilder hashBuilder = new HashBuilder(merchantAuthInfo.PrivateKey);
+        hashBuilder.Add(this.merchantAuthInfo.MerchantId);
+        hashBuilder.Add(requestModel.UserId);
+        hashBuilder.Add(fromDateStr);
+        hashBuilder.Add(toDateStr);
+        hashBuilder.Add(requestModel.GameId);
 
+        String rawHash = hashBuilder.Build();
         requestModel.Hash = sha256(rawHash);
         requestModel.MerchantId = merchantAuthInfo.MerchantId;
 

@@ -18,7 +18,10 @@ public class GameService extends BaseService {
 
     public GetGamesResponseContainer GetGames() {
 
-        String rawHash = this.merchantAuthInfo.MerchantId + "|" + this.merchantAuthInfo.PrivateKey;
+        HashBuilder hashBuilder = new HashBuilder(merchantAuthInfo.PrivateKey);
+        hashBuilder.Add(this.merchantAuthInfo.MerchantId);
+
+        String rawHash = hashBuilder.Build();
         String hash = sha256(rawHash);
 
         GetGamesRequest requestModel = new GetGamesRequest(this.merchantAuthInfo.MerchantId, hash);
