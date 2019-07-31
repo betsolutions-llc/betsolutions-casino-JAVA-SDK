@@ -1,6 +1,8 @@
 package Betsolutions.Casino.SDK.Services;
 
 import Betsolutions.Casino.SDK.DTO.MerchantAuthInfo;
+import Betsolutions.Casino.SDK.DTO.Rake.GetRakeDetailedRequest;
+import Betsolutions.Casino.SDK.DTO.Rake.GetRakeDetailedResponseContainer;
 import Betsolutions.Casino.SDK.DTO.Rake.GetRakeRequest;
 import Betsolutions.Casino.SDK.DTO.Rake.GetRakeResponseContainer;
 import Betsolutions.Casino.SDK.Enums.StatusCode;
@@ -68,5 +70,58 @@ public class RakeService extends BaseService {
         }
 
         return gson.fromJson(responseBodyStr, GetRakeResponseContainer.class);
+    }
+
+    public GetRakeDetailedResponseContainer GetRakeDetailed(GetRakeDetailedRequest requestModel) {
+
+        String fromDateStr = null;
+
+        if (null != requestModel.FromDate) {
+            fromDateStr = dateFormat.format(requestModel.FromDate);
+        }
+
+        String toDateStr = null;
+
+        if (null != requestModel.ToDate) {
+            toDateStr = dateFormat.format(requestModel.ToDate);
+        }
+
+        String rawHash = this.merchantAuthInfo.MerchantId + "|" + Objects.toString(requestModel.UserId, "") + "|" + Objects.toString(fromDateStr, "") + "|" + Objects.toString(toDateStr, "") + "|" + Objects.toString(requestModel.GameId, "") + "|" + this.merchantAuthInfo.PrivateKey;
+
+        requestModel.Hash = sha256(rawHash);
+        requestModel.MerchantId = merchantAuthInfo.MerchantId;
+
+        String requestJsonStr = gson.toJson(requestModel, GetRakeDetailedRequest.class);
+
+        RequestBody body = RequestBody.create(requestJsonStr, JSON);
+
+        String url = this.baseUrl + "GetRakeDetailed";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        Response response;
+
+        try {
+            OkHttpClient client = new OkHttpClient();
+            response = client.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return new GetRakeDetailedResponseContainer(StatusCode.GeneralError, e.getMessage());
+        }
+
+        String responseBodyStr;
+
+        try {
+            responseBodyStr = Objects.requireNonNull(response.body()).string();
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            return new GetRakeDetailedResponseContainer(StatusCode.GeneralError, e.getMessage());
+        }
+
+        return gson.fromJson(responseBodyStr, GetRakeDetailedResponseContainer.class);
     }
 }
