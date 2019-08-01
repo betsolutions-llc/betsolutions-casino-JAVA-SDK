@@ -23,25 +23,23 @@ public class RakeService extends BaseService {
         String fromDateStr = null;
 
         if (null != requestModel.FromDate) {
-            fromDateStr = dateFormat.format(requestModel.FromDate);
+            fromDateStr = this.dateFormatter.format(requestModel.FromDate);
         }
 
         String toDateStr = null;
 
         if (null != requestModel.ToDate) {
-            toDateStr = dateFormat.format(requestModel.ToDate);
+            toDateStr = this.dateFormatter.format(requestModel.ToDate);
         }
 
-        HashBuilder hashBuilder = new HashBuilder(merchantAuthInfo.PrivateKey);
+        HashBuilder hashBuilder = GetHashBuilder(merchantAuthInfo.PrivateKey);
         hashBuilder.Add(this.merchantAuthInfo.MerchantId);
         hashBuilder.Add(requestModel.UserId);
         hashBuilder.Add(fromDateStr);
         hashBuilder.Add(toDateStr);
         hashBuilder.Add(requestModel.GameId);
 
-        String rawHash = hashBuilder.Build();
-
-        requestModel.Hash = sha256(rawHash);
+        requestModel.Hash = hashBuilder.Build();
         requestModel.MerchantId = merchantAuthInfo.MerchantId;
 
         String requestJsonStr = gson.toJson(requestModel, GetRakeRequest.class);
@@ -82,24 +80,23 @@ public class RakeService extends BaseService {
         String fromDateStr = null;
 
         if (null != requestModel.FromDate) {
-            fromDateStr = dateFormat.format(requestModel.FromDate);
+            fromDateStr = this.dateFormatter.format(requestModel.FromDate);
         }
 
         String toDateStr = null;
 
         if (null != requestModel.ToDate) {
-            toDateStr = dateFormat.format(requestModel.ToDate);
+            toDateStr = this.dateFormatter.format(requestModel.ToDate);
         }
 
-        HashBuilder hashBuilder = new HashBuilder(merchantAuthInfo.PrivateKey);
+        HashBuilder hashBuilder = GetHashBuilder(merchantAuthInfo.PrivateKey);
         hashBuilder.Add(this.merchantAuthInfo.MerchantId);
         hashBuilder.Add(requestModel.UserId);
         hashBuilder.Add(fromDateStr);
         hashBuilder.Add(toDateStr);
         hashBuilder.Add(requestModel.GameId);
 
-        String rawHash = hashBuilder.Build();
-        requestModel.Hash = sha256(rawHash);
+        requestModel.Hash = hashBuilder.Build();
         requestModel.MerchantId = merchantAuthInfo.MerchantId;
 
         String requestJsonStr = gson.toJson(requestModel, GetRakeDetailedRequest.class);

@@ -18,11 +18,10 @@ public class GameService extends BaseService {
 
     public GetGamesResponseContainer GetGames() {
 
-        HashBuilder hashBuilder = new HashBuilder(merchantAuthInfo.PrivateKey);
+        HashBuilder hashBuilder = GetHashBuilder(merchantAuthInfo.PrivateKey);
         hashBuilder.Add(this.merchantAuthInfo.MerchantId);
 
-        String rawHash = hashBuilder.Build();
-        String hash = sha256(rawHash);
+        String hash = hashBuilder.Build();
 
         GetGamesRequest requestModel = new GetGamesRequest(this.merchantAuthInfo.MerchantId, hash);
         String requestJsonStr = gson.toJson(requestModel, GetGamesRequest.class);

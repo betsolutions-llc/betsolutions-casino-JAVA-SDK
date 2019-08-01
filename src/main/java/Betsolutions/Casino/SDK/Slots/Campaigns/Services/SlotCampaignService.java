@@ -1,8 +1,9 @@
-package Betsolutions.Casino.SDK.Services;
+package Betsolutions.Casino.SDK.Slots.Campaigns.Services;
 
 import Betsolutions.Casino.SDK.DTO.MerchantAuthInfo;
-import Betsolutions.Casino.SDK.DTO.Wallet.*;
 import Betsolutions.Casino.SDK.Enums.StatusCode;
+import Betsolutions.Casino.SDK.Services.BaseService;
+import Betsolutions.Casino.SDK.Slots.Campaigns.DTO.*;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -10,28 +11,33 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.util.Objects;
 
-public class WalletService extends BaseService {
-
-    public WalletService(MerchantAuthInfo merchantAuthInfo) {
-        super(merchantAuthInfo, "Wallet");
+public class SlotCampaignService extends BaseService {
+    public SlotCampaignService(MerchantAuthInfo merchantAuthInfo) {
+        super(merchantAuthInfo, "SlotCampaign");
     }
 
-    public GetBalanceResponseContainer GetBalance(GetBalanceRequest requestModel) {
+    public CreateSlotCampaignResponseContainer CreateSlotCampaign(CreateSlotCampaignRequest requestModel) {
 
         HashBuilder hashBuilder = GetHashBuilder(merchantAuthInfo.PrivateKey);
-        hashBuilder.Add(requestModel.Currency);
+
+        hashBuilder.Add(requestModel.CampaignTypeId);
+        hashBuilder.Add(requestModel.EndDate);
+        hashBuilder.Add(requestModel.StartDate);
+        hashBuilder.Add(requestModel.FreespinCount);
+        hashBuilder.Add(requestModel.GameId);
         hashBuilder.Add(this.merchantAuthInfo.MerchantId);
-        hashBuilder.Add(requestModel.Token);
-        hashBuilder.Add(requestModel.UserId);
+        hashBuilder.Add(requestModel.Name);
+        hashBuilder.Add(requestModel.BetAmountsPerCurrency);
+        hashBuilder.Add(requestModel.PlayerIds);
 
         requestModel.Hash = hashBuilder.Build();
         requestModel.MerchantId = merchantAuthInfo.MerchantId;
 
-        String requestJsonStr = gson.toJson(requestModel, GetBalanceRequest.class);
+        String requestJsonStr = gson.toJson(requestModel, CreateSlotCampaignRequest.class);
 
         RequestBody body = RequestBody.create(requestJsonStr, JSON);
 
-        String url = this.baseUrl + "GetBalance";
+        String url = this.baseUrl + "CreateSlotCampaign";
 
         Request request = new Request.Builder()
                 .url(url)
@@ -46,7 +52,7 @@ public class WalletService extends BaseService {
         } catch (IOException e) {
             e.printStackTrace();
 
-            return new GetBalanceResponseContainer(StatusCode.GeneralError, e.getMessage());
+            return new CreateSlotCampaignResponseContainer(StatusCode.GeneralError, e.getMessage());
         }
 
         String responseBodyStr;
@@ -55,31 +61,28 @@ public class WalletService extends BaseService {
             responseBodyStr = Objects.requireNonNull(response.body()).string();
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
-            return new GetBalanceResponseContainer(StatusCode.GeneralError, e.getMessage());
+            return new CreateSlotCampaignResponseContainer(StatusCode.GeneralError, e.getMessage());
         }
 
-        return gson.fromJson(responseBodyStr, GetBalanceResponseContainer.class);
+        return gson.fromJson(responseBodyStr, CreateSlotCampaignResponseContainer.class);
     }
 
-    public DepositResponseContainer Deposit(DepositRequest requestModel) {
+    public AddPlayersToCampaignResponseContainer AddPlayersToCampaign(AddPlayersToCampaignRequest requestModel) {
 
         HashBuilder hashBuilder = GetHashBuilder(merchantAuthInfo.PrivateKey);
 
-        hashBuilder.Add(requestModel.Amount);
-        hashBuilder.Add(requestModel.Currency);
+        hashBuilder.Add(requestModel.CampaignId);
         hashBuilder.Add(this.merchantAuthInfo.MerchantId);
-        hashBuilder.Add(requestModel.TransactionId);
-        hashBuilder.Add(requestModel.Token);
-        hashBuilder.Add(requestModel.UserId);
+        hashBuilder.Add(requestModel.PlayerIds);
 
         requestModel.Hash = hashBuilder.Build();
         requestModel.MerchantId = merchantAuthInfo.MerchantId;
 
-        String requestJsonStr = gson.toJson(requestModel, DepositRequest.class);
+        String requestJsonStr = gson.toJson(requestModel, AddPlayersToCampaignRequest.class);
 
         RequestBody body = RequestBody.create(requestJsonStr, JSON);
 
-        String url = this.baseUrl + "Deposit";
+        String url = this.baseUrl + "AddPlayersToSlotCampaign";
 
         Request request = new Request.Builder()
                 .url(url)
@@ -94,7 +97,7 @@ public class WalletService extends BaseService {
         } catch (IOException e) {
             e.printStackTrace();
 
-            return new DepositResponseContainer(StatusCode.GeneralError, e.getMessage());
+            return new AddPlayersToCampaignResponseContainer(StatusCode.GeneralError, e.getMessage());
         }
 
         String responseBodyStr;
@@ -103,31 +106,27 @@ public class WalletService extends BaseService {
             responseBodyStr = Objects.requireNonNull(response.body()).string();
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
-            return new DepositResponseContainer(StatusCode.GeneralError, e.getMessage());
+            return new AddPlayersToCampaignResponseContainer(StatusCode.GeneralError, e.getMessage());
         }
 
-        return gson.fromJson(responseBodyStr, DepositResponseContainer.class);
+        return gson.fromJson(responseBodyStr, AddPlayersToCampaignResponseContainer.class);
     }
 
-    public WithdrawResponseContainer Withdraw(WithdrawRequest requestModel) {
+    public DeactivateSlotCampaignResponseContainer DeactivateSlotCampaign(DeactivateSlotCampaignRequest requestModel) {
 
         HashBuilder hashBuilder = GetHashBuilder(merchantAuthInfo.PrivateKey);
 
-        hashBuilder.Add(requestModel.Amount);
-        hashBuilder.Add(requestModel.Currency);
         hashBuilder.Add(this.merchantAuthInfo.MerchantId);
-        hashBuilder.Add(requestModel.TransactionId);
-        hashBuilder.Add(requestModel.Token);
-        hashBuilder.Add(requestModel.UserId);
+        hashBuilder.Add(requestModel.Id);
 
         requestModel.Hash = hashBuilder.Build();
         requestModel.MerchantId = merchantAuthInfo.MerchantId;
 
-        String requestJsonStr = gson.toJson(requestModel, WithdrawRequest.class);
+        String requestJsonStr = gson.toJson(requestModel, DeactivateSlotCampaignRequest.class);
 
         RequestBody body = RequestBody.create(requestJsonStr, JSON);
 
-        String url = this.baseUrl + "Withdraw";
+        String url = this.baseUrl + "DeactivateSlotCampaign";
 
         Request request = new Request.Builder()
                 .url(url)
@@ -142,7 +141,7 @@ public class WalletService extends BaseService {
         } catch (IOException e) {
             e.printStackTrace();
 
-            return new WithdrawResponseContainer(StatusCode.GeneralError, e.getMessage());
+            return new DeactivateSlotCampaignResponseContainer(StatusCode.GeneralError, e.getMessage());
         }
 
         String responseBodyStr;
@@ -151,9 +150,9 @@ public class WalletService extends BaseService {
             responseBodyStr = Objects.requireNonNull(response.body()).string();
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
-            return new WithdrawResponseContainer(StatusCode.GeneralError, e.getMessage());
+            return new DeactivateSlotCampaignResponseContainer(StatusCode.GeneralError, e.getMessage());
         }
 
-        return gson.fromJson(responseBodyStr, WithdrawResponseContainer.class);
+        return gson.fromJson(responseBodyStr, DeactivateSlotCampaignResponseContainer.class);
     }
 }
