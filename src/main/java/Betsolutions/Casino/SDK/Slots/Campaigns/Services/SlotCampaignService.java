@@ -155,4 +155,109 @@ public class SlotCampaignService extends BaseService {
 
         return gson.fromJson(responseBodyStr, DeactivateSlotCampaignResponseContainer.class);
     }
+
+    public GetSlotConfigsResponseContainer GetSlotConfigs() {
+
+        GetSlotConfigsRequest requestModel = new GetSlotConfigsRequest();
+
+        HashBuilder hashBuilder = GetHashBuilder(merchantAuthInfo.PrivateKey);
+
+        hashBuilder.Add(this.merchantAuthInfo.MerchantId);
+
+        requestModel.Hash = hashBuilder.Build();
+        requestModel.MerchantId = merchantAuthInfo.MerchantId;
+
+        String requestJsonStr = gson.toJson(requestModel, GetSlotConfigsRequest.class);
+
+        RequestBody body = RequestBody.create(requestJsonStr, JSON);
+
+        String url = this.baseUrl + "GetMerchantSlotConfigs";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        Response response;
+
+        try {
+
+            response = httpClient.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return new GetSlotConfigsResponseContainer(StatusCode.GeneralError, e.getMessage());
+        }
+
+        String responseBodyStr;
+
+        try {
+            responseBodyStr = Objects.requireNonNull(response.body()).string();
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            return new GetSlotConfigsResponseContainer(StatusCode.GeneralError, e.getMessage());
+        }
+
+        return gson.fromJson(responseBodyStr, GetSlotConfigsResponseContainer.class);
+    }
+
+    public GetSlotCampaignsResponseContainer GetSlotCampaigns(GetSlotCampaignsRequest requestModel) {
+
+        HashBuilder hashBuilder = GetHashBuilder(merchantAuthInfo.PrivateKey);
+
+        hashBuilder.Add(this.merchantAuthInfo.MerchantId);
+        hashBuilder.Add(requestModel.CampaignId);
+        hashBuilder.Add(requestModel.EndDateFrom);
+        hashBuilder.Add(requestModel.EndDateTo);
+        hashBuilder.Add(requestModel.StartDateFrom);
+        hashBuilder.Add(requestModel.StartDateTo);
+        hashBuilder.Add(requestModel.StatusId);
+        hashBuilder.Add(requestModel.GameId);
+        hashBuilder.Add(requestModel.Name);
+        hashBuilder.Add(requestModel.OrderingDirection);
+        hashBuilder.Add(requestModel.OrderingField);
+        hashBuilder.Add(requestModel.PageIndex);
+        hashBuilder.Add(requestModel.PageSize);
+
+        requestModel.Hash = hashBuilder.Build();
+        requestModel.MerchantId = merchantAuthInfo.MerchantId;
+
+        String requestJsonStr = gson.toJson(requestModel, GetSlotCampaignsRequest.class);
+
+        RequestBody body = RequestBody.create(requestJsonStr, JSON);
+
+        String url = this.baseUrl + "GetSlotCampaigns";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        Response response;
+
+        try {
+
+            response = httpClient.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return new GetSlotCampaignsResponseContainer(StatusCode.GeneralError, e.getMessage());
+        }
+
+        String responseBodyStr;
+
+        try {
+            responseBodyStr = Objects.requireNonNull(response.body()).string();
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
+            return new GetSlotCampaignsResponseContainer(StatusCode.GeneralError, e.getMessage());
+        }
+
+        return gson.fromJson(responseBodyStr, GetSlotCampaignsResponseContainer.class);
+    }
+
+    class GetSlotConfigsRequest {
+        public int MerchantId;
+        public String Hash;
+    }
 }
