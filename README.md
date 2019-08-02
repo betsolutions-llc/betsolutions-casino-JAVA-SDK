@@ -1,0 +1,1 @@
+Latest version: [https://static-cdn.betsolutions.com/casino/SDK/java/Prod/casino-sdk-1.0.jar](https://static-cdn.betsolutions.com/casino/SDK/java/Prod/casino-sdk-1.0.jar)
