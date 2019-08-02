@@ -4,5 +4,5 @@ import java.util.List;
 
 public class BackgammonTournamentPagingResult {
     public int TotalCount;
-    public List<BackgammonTournamentModel> Tournaments;
+    public List<BackgammonTournament> Tournaments;
 }

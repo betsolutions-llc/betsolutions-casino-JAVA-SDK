@@ -5,5 +5,5 @@ import java.util.List;
 
 public class BuraTournamentPagingResult {
     public int TotalCount;
-    public List<BuraTournamentModel> Tournaments;
+    public List<BuraTournament> Tournaments;
 }

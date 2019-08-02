@@ -3,7 +3,7 @@ package Betsolutions.Casino.SDK.TableGames.Backgammon.DTO;
 import java.util.Date;
 import java.util.List;
 
-public class BackgammonTournamentModel {
+public class BackgammonTournament {
     public int Id;
     public float BetAmount;
     public float Prize;
